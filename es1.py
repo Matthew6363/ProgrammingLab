@@ -8,6 +8,6 @@ def sum_list(my_list):
 
     return somma
 
-my_list = [1,2,3,4,5]
+my_list = [1,2,3,4,6]
 somma = sum_list(my_list)
 print('somma = {} ' .format(somma))
