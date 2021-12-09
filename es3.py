@@ -3,7 +3,6 @@ class CSVfile():
 
         self.name = name
         
-
     def get_data(self):
 
         my_list = []
