@@ -2,7 +2,11 @@ class CSVfile():
     def __init__(self, name):
 
         self.name = name
-        
+
+        if (type(self.name) != str):
+            
+            raise Exception ('errore generato da {}'.format(name))
+
     def get_data(self):
 
         my_list = []
@@ -22,5 +26,5 @@ class CSVfile():
               
         return my_list
 
-file1 = CSVfile('shampoo_sales.csv')
+file1 = CSVfile('12')
 print('Lista: {}'.format(file1.get_data()))
