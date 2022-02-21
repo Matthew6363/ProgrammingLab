@@ -1,18 +1,42 @@
+
+class ExamException:
+    pass
+
+
+
 class CSVTimeSeriesFile():
     def __init__(self, name):
 
         self.name = name
 
         if (type(self.name) != str):
-            
-            raise ExamException ('errore generato da {}'.format(name))
 
-    def get_data(self):
+            print('Nome file non è una stringa')
+
+            try:
+
+                self.name = str(name)
+
+            except Exception:
+
+                raise ExamException ('Non è stato possibile effettuare la conversione')
+                
+            def get_data(self):
 
         my_list = []
 
-        my_file = open(self.name, 'r')
+        try: 
 
+            my_file = open(self.name, 'r')
+
+          
+
+        except Exception :
+
+            raise ExamException ("Non è possibile aprire il file")
+            
+            my_file.close()
+            
         for line in my_file:
 
             riga = line.split(',')
@@ -57,9 +81,4 @@ def detect_similar_monthly_variations(time_series, years):
         else: lista_fin.append('True')
 
     return lista_fin
-
-#for i in range(11):
-    
-    years = [1949+i,1949+i+1]
-    print(detect_similar_monthly_variations(time_series, years))
 

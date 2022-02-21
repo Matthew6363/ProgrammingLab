@@ -1,6 +1,3 @@
-class ExamException(Exception):
-    pass
-
 class CSVTimeSeriesFile():
     def __init__(self, name):
 
@@ -28,30 +25,52 @@ class CSVTimeSeriesFile():
 
         return my_list
 
-time_series_file = CSVTimeSeriesFile(name='data.csv')
-time_series = time_series_file.get_data()
-print(time_series)
+#time_series_file = CSVTimeSeriesFile(name='data.csv')
+#time_series = time_series_file.get_data()
 
 
 
 def detect_similar_monthly_variations(time_series, years):
 
-    i = 0
+    ci = []
+    di = []
+    lista_fin = []
+    
+    a = [riga[1] for riga in time_series if riga[0][0:4] == str(years[0])]
+    
+    
+    b = [riga[1] for riga in time_series if riga[0][0:4] == str(years[1])]
+  
 
-    lista = []
+    for i in range(12):
+        a[i] = int (a[i])
+        b[i] = int (b[i])
 
-    while i < 24:
-        
-        diff = time_series[i+1][1]-time_series[i][1]
+    for i in range(11):
+        c = a[i+1]-a[i]
+        d = b[i+1]-b[i]  
+        ci.append(c)
+        di.append(d)
+        if(ci[i] - di[i] > 2 or ci[i] - di[i] < -2 ):
+            lista_fin.append('False')
 
-        i = i+1
+        else: lista_fin.append('True')
 
-        lista.append(diff)
+    return lista_fin
 
-    return lista
-l
-print(lista)
+#for i in range(11):
+    
+    #years = [1949+i,1949+i+1]
+    #print(detect_similar_monthly_variations(time_series, years))
 
-
-
-
+try:
+            with open(self.name) as f:
+                my_file = f.read()
+                
+        except IOError as x:
+            if x.Errno == Errno.ENOENT:
+                raise ExamException ("file non esistente")
+            elif x.Errno == Errno.EACCES:
+                raise ExamException ("File illeggibile")
+            else:
+                raise ExamException ("Qualcosa è andato storto nell apertura del file")
