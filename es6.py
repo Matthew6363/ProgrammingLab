@@ -42,13 +42,22 @@ class CSVTimeSeriesFile():
 
             if riga [0] != 'date':
                 
-                if riga[1] == ' ':
+                if all('' == s or s.isspace() for s in riga[1]):
 
                     riga[1] = 0
 
+                try:
+
+                    riga[1] = int (riga[1])
+
+                except : 
+
+                    riga[1] = 0
+
+
                 else:
 
-                    riga[1] = riga[1][0:-1]
+                    riga[1] = riga[1]
 
                 my_list.append(riga)
 
@@ -65,6 +74,27 @@ class CSVTimeSeriesFile():
 
 
         return my_list
+
+mesi = ["01","02","03","04","05","06","07","08","09","10","11","12"]
+anno = {"01":30, "03":107}
+
+def sistema_tutto_che_se_no_mi_arrabbio(mesi, anno):
+    ''' 'La funzione prende in argomento una lista per avere i mesi come chiave e un dizionario in cui inserire chiavi. Se non sono presenti, alza un errore. Se lo alza, metto 0.
+        1Se non alza un errore invece, metto in da_ritornare la chiave "mesi[i]" e ci associ il valore che c'è nella corrispondente di anno.'''
+        
+    
+    lista = []
+    da_ritornare = dict() #dizionario vuoto, {}
+    for i in range(12): #i lo uso come iteratore per tutto il processo
+        try: #chiamare una chiave che non esiste alza un KeyError. Metto un try.
+            da_ritornare[mesi[i]] = anno[mesi[i]] 
+            lista.append(anno[mesi[i]])
+        except: #Non ho quella chiave
+            #Devo mettere 0 in chiave che manca
+            da_ritornare[mesi[i]] = 0
+            lista.append(0)
+            
+    return lista
 
 
 
@@ -121,6 +151,7 @@ def detect_similar_monthly_variations(time_series, years):
         pass_sec_anno[i] = int (pass_sec_anno[i])
 
     for i in range(11):
+        
         variaz_mesi_primo_anno = pass_primo_anno[i+1]-pass_primo_anno[i]
 
         variaz_mesi_sec_anno = pass_sec_anno[i+1]-pass_sec_anno[i]
@@ -129,13 +160,24 @@ def detect_similar_monthly_variations(time_series, years):
 
         lista_variaz_sec_anno.append(variaz_mesi_sec_anno)
 
-        if(lista_variaz_primo_anno[i] - lista_variaz_sec_anno[i] > 2 or lista_variaz_primo_anno[i] - lista_variaz_sec_anno[i] < -2 ):
+        diff = lista_variaz_primo_anno[i] - lista_variaz_sec_anno[i]
+
+        if diff == lista_variaz_primo_anno[i] or diff == lista_variaz_sec_anno[i]:
+            diff = 4
+
+        if(diff > 2 or diff < -2 ):
             lista_finale.append(2<1)
 
         else: lista_finale.append(1<2)
 
     return lista_finale
 
+time_series_file = CSVTimeSeriesFile(name='data.csv')
+time_series = time_series_file.get_data()
+years = [1949,1950]
+print(detect_similar_monthly_variations(time_series, years))
+
+   
 
 
 
