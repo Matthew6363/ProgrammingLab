@@ -13,11 +13,9 @@ class CSVTimeSeriesFile():
             try:
                 self.name = str(name)
             except Exception:
+    
                 raise ExamException ('Non è stato possibile effettuare la conversione')
-
-  
-
-
+    
     def get_data(self):
         my_list = []
         time_stamp = []
@@ -25,7 +23,6 @@ class CSVTimeSeriesFile():
             my_file = open(self.name, 'r')
         except Exception :
             raise ExamException ("Non è possibile aprire il file")
-
             my_file.close()
 
         for line in my_file:
@@ -34,36 +31,24 @@ class CSVTimeSeriesFile():
 
             if riga [0] != 'date':
 
-             
-                
-                if all('' == s or s.isspace() for s in                  riga[1]):
-
-                       riga[1] = 0
-
                 try:
-                    
                     riga[1] = int (riga[1])
-
                     if riga[1] <= 0:
                         riga[1] = 'mancante'
-                         
-                
                 except:
                     riga[1] = 'mancante'
                   
                 try:
                     datetime.datetime.strptime(riga[0], '%Y-%m')
                 except ValueError:
-                    raise ExamException ('sono presenti date non corrette')
-                 
+                    raise ExmaException ('Presenti date non corrette nel file')
+                                   
                 my_list.append(riga[0:2])
 
                 time_stamp.append(riga[0])
 
         if not my_list:
             raise ExamException('Lista non completa')
-
-    
 
         for x in range (len(my_list)-1):
             for h in range (x+1,len(my_list)):
@@ -74,15 +59,9 @@ class CSVTimeSeriesFile():
             if time_stamp[x+1] < time_stamp[x]:
                 raise ExamException('Sequenza temporale non ordinata')
 
-     
-
-
-
         return my_list
 
-
-
-
+        
 def detect_similar_monthly_variations(time_series, years):
 
     #controllo che la lista years non sia vuota
