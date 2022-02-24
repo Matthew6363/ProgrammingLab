@@ -50,9 +50,7 @@ class CSVTimeSeriesFile():
 
              
                 
-                if all('' == s or s.isspace() for s in                  riga[1]):
-
-                       riga[1] = 0
+                
 
                 try:
                     

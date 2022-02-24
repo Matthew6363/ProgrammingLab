@@ -8,6 +8,8 @@ class ExamException(Exception):
 class CSVTimeSeriesFile():
     def __init__(self, name):
         self.name = name
+
+        #verifico se il nome del file è una strina, in caso negativo tento la conversione
         if (type(self.name) != str):
             print('Nome file non è una stringa')
             try:
@@ -17,8 +19,10 @@ class CSVTimeSeriesFile():
                 raise ExamException ('Non è stato possibile effettuare la conversione')
     
     def get_data(self):
+        #creo liste vuote
         my_list = []
         time_stamp = []
+        #provo ad aprire il file, altrimenti eccezione e chiudo il file
         try:
             my_file = open(self.name, 'r')
         except Exception :
@@ -31,13 +35,16 @@ class CSVTimeSeriesFile():
 
             if riga [0] != 'date':
 
+                #converto numero passeggeri a int, in caso negativo pongo 'mancante'
+
                 try:
                     riga[1] = int (riga[1])
                     if riga[1] <= 0:
                         riga[1] = 'mancante'
                 except:
                     riga[1] = 'mancante'
-                  
+
+                #verifico la bontà della data
                 try:
                     datetime.datetime.strptime(riga[0], '%Y-%m')
                 except ValueError:
@@ -50,11 +57,13 @@ class CSVTimeSeriesFile():
         if not my_list:
             raise ExamException('Lista non completa')
 
+        #controllo non ci siano dati doppi basandomi sulle date
         for x in range (len(my_list)-1):
             for h in range (x+1,len(my_list)):
                 if my_list[x][0] == my_list[h][0]:
                     raise ExamException ('Ci sono dati duplicati nel file')
-
+        
+        #controllo ordine cronologico date 
         for x in range(len(time_stamp)-1):
             if time_stamp[x+1] < time_stamp[x]:
                 raise ExamException('Sequenza temporale non ordinata')
@@ -65,7 +74,6 @@ class CSVTimeSeriesFile():
 def detect_similar_monthly_variations(time_series, years):
 
     #controllo che la lista years non sia vuota
-    
     if not years:
         raise ExamException('la lista degli anni è vuota')
         
@@ -92,6 +100,7 @@ def detect_similar_monthly_variations(time_series, years):
     # Il primo anno deve essere piu piccolo del secondo, in caso negativo scambio gli anni forniti
         
     if years[0] > years[1]:
+        
         tmp = years[0]
         years[0] = years[1]
         years[1] = tmp

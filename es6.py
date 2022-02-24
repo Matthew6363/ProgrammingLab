@@ -45,11 +45,8 @@ class CSVTimeSeriesFile():
                 except:
                     riga[1] = 'mancante'
                   
-                try:
-                    datetime.datetime.strptime(riga[0], '%Y-%m')
-                except ValueError:
-                    riga[1] = 'mancante'
-                 
+                
+                    
                 my_list.append(riga[0:2])
 
                 time_stamp.append(riga[0])
@@ -64,9 +61,7 @@ class CSVTimeSeriesFile():
                 if my_list[x][0] == my_list[h][0]:
                     raise ExamException ('Ci sono dati duplicati nel file')
 
-        for x in range(len(time_stamp)-1):
-            if time_stamp[x+1] < time_stamp[x]:
-                raise ExamException('Sequenza temporale non ordinata')
+        
 
      
 
@@ -78,6 +73,49 @@ class CSVTimeSeriesFile():
 
 
 def detect_similar_monthly_variations(time_series, years):
+
+    for riga in time_series:
+        try:
+            datetime.datetime.strptime(riga[0], '%Y-%m')
+        except ValueError:
+            del riga
+            
+    
+    pass_primo_anno = []
+    pass_sec_anno = []
+    
+    last_month = 0
+    month = 0
+    for item in time_series:
+        if int(item[0][0:4]) == years[0]:
+            month = int(item[0][5:7])
+            while month != last_month+1:
+                
+                pass_primo_anno.append(0)
+                last_month = last_month+1
+            pass_primo_anno.append(item[1])
+            last_month = last_month+1
+        
+        elif int(item[0][0:4]) == years[1]:
+            month = int(item[0][5:7])
+            if last_month > 11:
+                last_month = 0
+            while month > last_month+1:
+                pass_sec_anno.append(0)
+                last_month = last_month+1
+            pass_sec_anno.append(item[1])
+            last_month = last_month+1
+    for i in range(len(pass_sec_anno),12):
+        y.append(0)
+    for i in range(len(pass_primo_anno),12):
+        pass_primo_anno.append(0)
+
+    for item in pass_primo_anno:
+        if item == 0:
+            item = 'mancante'
+    for item in pass_sec_anno:
+        if item == 0:
+            item = 'mancante'
 
     #controllo che la lista years non sia vuota
     
@@ -134,9 +172,7 @@ def detect_similar_monthly_variations(time_series, years):
 
     #con una lista comprehension riempio due liste con i dati riguardanti il numero mensile di passeggeri 
 
-    pass_primo_anno = [riga[1] for riga in time_series if riga[0][0:4] == str(years[0])]
-
-    pass_sec_anno = [riga[1] for riga in time_series if riga[0][0:4] == str(years[1])]
+  
 
    #calcolo le variazioni del num dei pass per per il primo e il secondo anno forniti e li inserisco nelle apposite liste, inserisco 'mancante' se non la posso calcolare
 
